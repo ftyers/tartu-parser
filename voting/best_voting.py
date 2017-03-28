@@ -257,39 +257,19 @@ if __name__ == "__main__":
                 a = list(list(nodes[i][(s, t, x)])[0])
                 a[0] = int(a[0])
                 finalnodes[i].append(a)
-    try:
-        #op = open(args.output, 'w', encoding='utf-8')
-        #print("Got here")
-        for i in finalnodes:
-            for k in comments[i]:
-                args.output.write('\t'.join(k) + '\n')
-            if len(range_tags[i]) > 0:
-                for j in sorted(finalnodes[i]):
-                    for l in range_tags[i]:
-                        l = list(filter(lambda a: a != '', l))
-                        if str(j[0]) == str(l[0][0]):
-                            args.output.write('\t'.join(l) + '\n')
-                    args.output.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (
-                        j[0], j[1], j[2], j[3], j[4], j[5], j[6], j[7], j[8], j[9]) + '\n')  # '''
-            else:
-                for j in sorted(finalnodes[i]):
-                    args.output.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (
-                        j[0], j[1], j[2], j[3], j[4], j[5], j[6], j[7], j[8], j[9]) + '\n')  # '''
-            args.output.write('\n')
-    except TypeError:
-        for i in finalnodes:
-            for k in comments[i]:
-                print('\t'.join(k))
-            if len(range_tags[i]) > 0:
-                for j in sorted(finalnodes[i]):
-                    for l in range_tags[i]:
-                        l = list(filter(lambda a: a != '', l))
-                        if str(j[0]) == str(l[0][0]):
-                            print('\t'.join(l))
-                    print('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (
-                        j[0], j[1], j[2], j[3], j[4], j[5], j[6], j[7], j[8], j[9]))  # '''
-            else:
-                for j in sorted(finalnodes[i]):
-                    print('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (
-                        j[0], j[1], j[2], j[3], j[4], j[5], j[6], j[7], j[8], j[9]))  # '''
-            print('\n')
+    for i in finalnodes:
+        for k in comments[i]:
+            args.output.write('\t'.join(k) + '\n')
+        if len(range_tags[i]) > 0:
+            for j in sorted(finalnodes[i]):
+                for l in range_tags[i]:
+                    l = list(filter(lambda a: a != '', l))
+                    if str(j[0]) == str(l[0][0]):
+                        args.output.write('\t'.join(l) + '\n')
+                args.output.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (
+                    j[0], j[1], j[2], j[3], j[4], j[5], j[6], j[7], j[8], j[9]) + '\n')  # '''
+        else:
+            for j in sorted(finalnodes[i]):
+                args.output.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (
+                    j[0], j[1], j[2], j[3], j[4], j[5], j[6], j[7], j[8], j[9]) + '\n')  # '''
+        args.output.write('\n')
