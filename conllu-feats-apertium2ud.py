@@ -16,13 +16,13 @@ def convert(lema, xpos, feat, dep, s): #{
 
 	msd = set([xpos] + feat + [dep]);
 
-	print('>', msd, file=sys.stderr);
+	#print('>', msd, file=sys.stderr);
 
 	for i in s: #{
 		remainder = msd - i[1];
 		intersect = msd.intersection(i[1]);
 		if intersect == i[1]: #{
-			print('-', msd, intersect, remainder, i[2], '|||', u_pos, u_feat, u_dep, file=sys.stderr);
+			#print('-', msd, intersect, remainder, i[2], '|||', u_pos, u_feat, u_dep, file=sys.stderr);
 			for j in list(i[2]): #{
 				if j == j.upper(): #{
 					u_pos = j;
@@ -95,7 +95,7 @@ for line in sf.readlines(): #{
 
 	symbs.append(rule)
 		
-	print(nivell, inn, out, file=sys.stderr);
+	#print(nivell, inn, out, file=sys.stderr);
 #}
 # Order the rules by priority
 symbs.sort(); 
@@ -109,47 +109,20 @@ for line in sys.stdin.readlines(): #{
 		row += "_"
 
 	if len(row) == 5:
-		#these names are not correct
+		#these names are not correct!!
 		form = row[0]
 		lema = row[1]
-		upos = row[2]
-		xpos = row[3]
+		xpos = row[2]
+		dno = row[3]
 		feat = row[4]
 		
-		(u_lema, u_pos, u_feat, u_dep) = convert(lema, upos, [feat], xpos, symbs);
+		(u_lema, u_pos, u_feat, u_dep) = convert(lema, xpos, [feat], dno, symbs);
 
 		u_feat_s = list(set(u_feat.split('|')));
 		u_feat_s.sort(key=str.lower);
 		u_feat = '|'.join(u_feat_s);
 		
 		#we don't have xpostag and therefore we don't output it
-		print('%s\t%s\t%s\t%s\t%s\t' % (form, u_lema, u_pos, "_", u_feat))
+		print('%s\t%s\t%s\t%s\t%s\t' % (form, u_lema, u_pos, xpos, u_feat))
 
-	if line.count('\t') == 9: #{
-		row = line.strip('\n').split('\t');
-		if row[0].count('-') > 0: #{
-			sys.stdout.write(line);
-			continue;
-		#}
-
-		#3	vuosttalda	vuosttaldit	_	V	TV|Ind|Prs|Sg3	0	FMV	_	_
-		lema = row[2];
-		xpos = row[4];
-		feat = row[5].split('|');
-		udep = row[7];
-		misc = row[9];
-		if misc != '_': #{
-			misc = row[9].strip() + '|' + lema + '|' + xpos + '|' + '|'.join(feat).replace('_', '');
-		#}
-		misc = misc.strip('|');
-
-		(u_lema, u_pos, u_feat, u_dep) = convert(lema, xpos, feat, udep, symbs);
-		u_feat_s = list(set(u_feat.split('|')));
-		u_feat_s.sort(key=str.lower);
-		u_feat = '|'.join(u_feat_s);
-
-		print('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (row[0], row[1], u_lema, u_pos ,xpos, u_feat,row[6], row[7], row[8], misc))
-	else: #{
-		sys.stdout.write(line);
-	#}
 #}
