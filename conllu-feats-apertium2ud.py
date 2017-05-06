@@ -101,28 +101,33 @@ for line in sf.readlines(): #{
 symbs.sort(); 
 
 # Process a CoNLL-U file from stdin
+cnt = 0
 for line in sys.stdin.readlines(): #{
 	row = line.strip('\n').replace('>', '').replace('<',':').split(':')
 
 	#add last element if not present
 	if len(row) == 4:
-		row += "_"
+		row.append("_")
 
-	if len(row) == 5:
+	if len(row) > 4:
 		#these names are not correct!!
 		form = row[0]
 		lema = row[1]
 		xpos = row[2]
 		dno = row[3]
-		feat = row[4]
-		
-		(u_lema, u_pos, u_feat, u_dep) = convert(lema, xpos, [feat], dno, symbs);
+		feat = row[4:]
+		(u_lema, u_pos, u_feat, u_dep) = convert(lema, xpos, feat, dno, symbs);
 
 		u_feat_s = list(set(u_feat.split('|')));
 		u_feat_s.sort(key=str.lower);
 		u_feat = '|'.join(u_feat_s);
 		
 		#we don't have xpostag and therefore we don't output it
-		print('%s\t%s\t%s\t%s\t%s\t' % (form, u_lema, u_pos, xpos, u_feat))
-
+		print('%s\t%s\t%s\t%s\t%s' % (form, u_lema, u_pos, xpos, u_feat))
+#we actually lose every row that is shorter than 4
+#this also includes abbrevations
+#	else:
+#			cnt += 1
+#			print(cnt)
+#			print(row)
 #}
