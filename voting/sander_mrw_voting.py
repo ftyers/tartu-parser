@@ -172,7 +172,7 @@ def read_files(filenames):
                     names[current] = names.get(current, defaultdict())
                     nodes[current][(words_in[6], words_in[0], words_in[7])].add(tuple(words_in))
                     names[current][(words_in[6], words_in[0])] = words_in[7]
-                elif words_in[0] == "#sent_id":
+                elif words_in[0] == "#sent_id" or words_in[0].count('-'):
                     pass
                 elif len(words_in) >= 8:
                     try:
@@ -210,6 +210,7 @@ if __name__ == "__main__":
         #weights[i] += 0.5
     ## TODO: END OF DEFINE WEIGHTS
 
+    print(sys.argv[1:-1])
     file_data = read_files(sys.argv[1:-1])
     weighted = weighting(file_data[0],weights)
     nodes = file_data[1]
@@ -219,9 +220,9 @@ if __name__ == "__main__":
         arcs[i] = defaultdict(float)
         for j in weighted[i]:
             if arcs[i][(j[2], j[0])] == 0.0:
-                arcs[i][(j[2], j[0])] += 1 / weighted[i][j]
+                arcs[i][(j[2], j[0])] += 1 / (weighted[i][j] + 0.001)
             else:
-                arcs[i][(j[2], j[0])] *= 1 / weighted[i][j]
+                arcs[i][(j[2], j[0])] *= 1 / (weighted[i][j] + 0.001)
     finalnodes = defaultdict(list)
     for i in arcs:
         g = _load(arcs[i], arcs[i])
