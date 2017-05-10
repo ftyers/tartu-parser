@@ -11,7 +11,7 @@ def read_files(filenames):
     range_tags = defaultdict(set)
     comments = defaultdict(list)
     for filename in filenames:
-        print('Processing', filename)
+        #print('Processing', filename)
         files[filename] = defaultdict()
         sent_id = 0
 
@@ -90,7 +90,7 @@ if __name__ == "__main__":
                         default=sys.stdout, metavar='PATH',
                         help="Output file (default: standard output)")
     args = parser.parse_args()
-    print(args)
+    #print(args)
     ## TODO: DEFINE WEIGHTS HERE
     weights = defaultdict(float)
     #k = 0.5
