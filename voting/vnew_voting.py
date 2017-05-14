@@ -19,9 +19,9 @@ def read_files(filenames):
         with open(filename, 'r', encoding='utf-8') as f:
             for line in f:
                 words_in = line.strip().split('\t')#replace(' ', '\t').split('\t')
-                if "-" in words_in[0]:
-                    idx = words_in[0].split('-');
-                    spans[idx] = words_in;
+                if "-" in words_in[0] and words_in[0][0] != '#':
+                    idx = int(words_in[0].split('-')[0]);
+                    spans[idx] = '_'.join(line.strip().split('_')[0:9]);
 #                if "-" in words_in[0]:
 #                    if "1" in words_in[0]:
 #                        range_tags[sent_id+1].add(tuple(words_in))
@@ -305,10 +305,12 @@ if __name__ == "__main__":
 #                args.output.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (
 #                    j[0], j[1], j[2], j[3], j[4], j[5], j[6], j[7], j[8], j[9]) + '\n')  # '''
 #        else:
-         for j in sorted(finalnodes[i]):
-             if j in spans: #{
-                 print(spans[j]);
-             #}
-             args.output.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (
-                 j[0], j[1], j[2], j[3], j[4], j[5], j[6], j[7], j[8], j[9]) + '\n')  # '''
-         args.output.write('\n')
+
+        for j in sorted(finalnodes[i]):
+            if j[0] in spans: #{
+                args.output.write(spans[j[0]] + '\n');
+            #}
+            args.output.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (
+                j[0], j[1], j[2], j[3], j[4], j[5], j[6], j[7], j[8], j[9]) + '\n')  # '''
+        args.output.write('\n')
+
