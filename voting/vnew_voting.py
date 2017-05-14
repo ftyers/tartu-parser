@@ -8,7 +8,8 @@ def read_files(filenames):
     files = defaultdict()
     nodes = defaultdict()
     names = defaultdict()
-    range_tags = defaultdict(set)
+#    range_tags = defaultdict(set)
+    spans = {};
     comments = defaultdict(list)
     for filename in filenames:
         #print('Processing', filename)
@@ -19,10 +20,13 @@ def read_files(filenames):
             for line in f:
                 words_in = line.strip().split('\t')#replace(' ', '\t').split('\t')
                 if "-" in words_in[0]:
-                    if "1" in words_in[0]:
-                        range_tags[sent_id+1].add(tuple(words_in))
-                    else:
-                        range_tags[sent_id].add(tuple(words_in))
+                    idx = words_in[0].split('-');
+                    spans[idx] = words_in;
+#                if "-" in words_in[0]:
+#                    if "1" in words_in[0]:
+#                        range_tags[sent_id+1].add(tuple(words_in))
+#                    else:
+#                        range_tags[sent_id].add(tuple(words_in))
                 elif words_in[0] == "1":
                     sent_id += 1
                     files[filename][sent_id] = []
@@ -43,7 +47,8 @@ def read_files(filenames):
                         nodes[current][words_in[0]].add(tuple(words_in))
                     except IndexError:
                         pass
-    return files,nodes,names,range_tags,comments
+#    return files,nodes,names,range_tags,comments
+    return files,nodes,names,spans,comments
 
 
 def weighting(single_file_graphs, weights):
@@ -109,7 +114,8 @@ if __name__ == "__main__":
     nodes = file_data[1]
     arcs = defaultdict()
     names = file_data[2]
-    range_tags = file_data[3]
+#    range_tags = file_data[3]
+    spans = file_data[3]
     comments = file_data[4]
     for i in weighted:
         arcs[i] = defaultdict(float)
@@ -290,16 +296,19 @@ if __name__ == "__main__":
     for i in finalnodes:
         for k in comments[i]:
             args.output.write('\t'.join(k) + '\n')
-        if len(range_tags[i]) > 0:
-            for j in sorted(finalnodes[i]):
-                for l in range_tags[i]:
-                    l = list(filter(lambda a: a != '', l))
-                    if str(j[0]) == str(l[0][0]):
-                        args.output.write('\t'.join(l) + '\n')
-                args.output.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (
-                    j[0], j[1], j[2], j[3], j[4], j[5], j[6], j[7], j[8], j[9]) + '\n')  # '''
-        else:
-            for j in sorted(finalnodes[i]):
-                args.output.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (
-                    j[0], j[1], j[2], j[3], j[4], j[5], j[6], j[7], j[8], j[9]) + '\n')  # '''
-        args.output.write('\n')
+#        if len(range_tags[i]) > 0:
+#            for j in sorted(finalnodes[i]):
+#                for l in range_tags[i]:
+#                    l = list(filter(lambda a: a != '', l))
+#                    if str(j[0]) == str(l[0][0]):
+#                        args.output.write('\t'.join(l) + '\n')
+#                args.output.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (
+#                    j[0], j[1], j[2], j[3], j[4], j[5], j[6], j[7], j[8], j[9]) + '\n')  # '''
+#        else:
+         for j in sorted(finalnodes[i]):
+             if j in spans: #{
+                 print(spans[j]);
+             #}
+             args.output.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (
+                 j[0], j[1], j[2], j[3], j[4], j[5], j[6], j[7], j[8], j[9]) + '\n')  # '''
+         args.output.write('\n')
